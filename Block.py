@@ -1,68 +1,63 @@
 import datetime
-from operator import *
 import hashlib
-import Bencodex
+from Bencodex import *
 
 class Block():
 
-    _TimestampFormat = "yyyy--MM-ddTHH:mm:ss.ffffffZ"
-    _TimestampThreshold = datetime.timedelta(seconds=900)
+    __TimestampFormat = "yyyy--MM-ddTHH:mm:ss.ffffffZ"
+    __TimestampThreshold = datetime.timedelta(seconds=900)
 
-    # initialization 
-    def __init__(self, rb = None, **kwargs):
+    # initialize
+    def __init__(self, rb = None, index,difficulty, nonce, miner, previousHash,timestamp,txs):
         if rb == None:
-            self._index = kwargs[index]
-            self._difficulty = kwargs[difficulty]
-            self._nonce = kwargs[nonce]
-            self._miner = kwargs[miner]
-            self._previousHash = kwargs[previousHash]
-            self._timestamp = kwargs[timestamp]
-            self._transactions = sorted(kwargs[transcations], key=lambda transcation: transcation.Id)
-            self._hash = hashlib.sha256(ToBencodex(bytearray(self)))
-
+            self.____index = index
+            self.____difficulty = difficulty
+            self.____nonce = nonce
+            self.__miner = miner
+            self.__previousHash = previousHash
+            self.__timestamp = timestamp
+            self.__transactions = sorted(txs, key=lambda transcation: transcation.Id)
+            self.__hash = hashlib.sha256(ToBencodex(bytearray(self)))
 
         else:
-            _block(rb)
-
-    def _block(rb):
-        self._index =rb._index,
-        self._difficulty=rb._difficulty,
-        self._nonce=Nonce(rb._nonce),
-        self._miner=None if rb._miner == None else Address(rb._miner),
-        self._previousHash=None if rb._previousHash == None else rb._previousHash,
-        self._timestamp=rb._timestamp,
-        self._transactions=rb._transactions
-        self._hash = hashlib.sha256(ToBencodex(bytearray(self)))
+            __block(rb)
 
 
-    @property
+        def __block(rb):
+        self.__index =rb.__index,
+        self.__difficulty=rb.__difficulty,
+        self.__nonce=Nonce(rb.__nonce),
+        self.__miner=None if rb.__miner == None else Address(rb.__miner),
+        self.__previousHash=None if rb.__previousHash == None else rb.__previousHash,
+        self.__timestamp=rb.__timestamp,
+        self.__transactions=rb.__transactions
+        self.__hash = hashlib.sha256(ToBencodex(bytearray(self)))
+
     def Hash(self):
-        return self._hash
+        return self.__hash
 
-    @property
     def Index(self):
-        return self._index
+        return self.__index
 
-    @property
     def Difficulty(self):
-        return self._difficulty
+        return self.__difficulty
 
     def Nonce(self):
-        return self._nonce
+        return self.__nonce
 
     def Miner(self):
-        return self._miner
+        return self.__miner
 
     def PreviousHash(self):
-        return self._previousHash
+        return self.__previousHash
 
     def Timestamp(self):
-        return self._timestamp
+        return self.__timestamp
 
     def Transcations(self):
-        return self._transactions
-
-    def Mine(self, index, difficulty, miner, previousHash, timestamp, transactions, cancellationToken): #여기서 원래 libplanet 코드는 offset 찾아서 논스만 바꿔주는 방식임 -=> 이걸 어떻게 바꿀지는 생각좀
+        return self.__transactions
+ 
+    def Mine(self, index, difficulty, miner, previousHash, timestamp, transactions): #여기서 원래 libplanet 코드는 offset 찾아서 논스만 바꿔주는 방식임 -=> 이걸 어떻게 바꿀지는 생각좀
         txs = ToimmutableList(sorted(transactions, key = lambda tx: tx.Id))
 
         def MakeBlock(n):
@@ -84,58 +79,56 @@ class Block():
             stamp = copy.deepcopy(stampPrefix) + copy.deepcopy(nLenSter) + bytearray(0x3a) + copy.deepcopy(stampSuffix)
             return stamp
 
-        nonce = Hashcash.Answer(Stamp(n),self._difficulty)
+        nonce = Hashcash.Answer(Stamp(n),self.__difficulty)
 
         return MakeBlock(nonce)
 ]
 
-    def FromBencodex(encoded):
+    def FromBencodex(encoded): #yet
         serializer = BencodexFormatter()
 
-    def ToBencodex(hash, transactionData):  # bencodex.py 모듈 보고 마저 수정
+    def ToBencodex(hash, transactionData): #yet
         return;
 
-
-    def ToString():
-        return str(self._hash)
-
+    ##inner class
     class BlockSerializationContext():
         def __init__(self, hash, transactionData):
-            self._includeHash = hash
-            self._includeTransactionData = transactionData
+            self.__includeHash = hash
+            self.__includeTransactionData = transactionData
 
         @property
         def IncludeHash(self):
-            return self._includeHash
+            return self.__includeHash
 
         @property
         def includeTransactionData(self):
-            return self._includeTransactionData
+            return self.__includeTransactionData
 
-    def GetObjectData(info, context):
-        includeHash = False
-        includeTransactionData = False
-        if (serialCtx = context.Context) != None:
-            includeHash = serialCtx.IncludeHash
-            includeTransactionData = serialCtx.includeTransactionData
-        rawBlock = ToRawBlock(includeHash, includeTransactionData)
-        rawBlock,.GetObjectData(info, context)
+
+    # def GetObjectData(info, context):
+    #     includeHash = False
+    #     includeTransactionData = False
+    #     if (serialCtx = context.Context) != None:
+    #         includeHash = serialCtx.IncludeHash
+    #         includeTransactionData = serialCtx.includeTransactionData
+    #     rawBlock = ToRawBlock(includeHash, includeTransactionData)
+    #     rawBlock,.GetObjectData(info, context)
 
     def Validate(currentTime):
-        if currentTime + this._TimestampThreshold < this._timestamp:
+        if currentTime + this.__TimestampThreshold < this.__timestamp:
 
             raise Exception(
-                "The block {}'s timestamp ({}) is later than now ({}, threshold: {}).".format(self._index,
-                                                                                              self._timestamp,
+                "The block {}'s timestamp ({}) is later than now ({}, threshold: {}).".format(self.__index,
+                                                                                              self.__timestamp,
                                                                                               currentTime,
-                                                                                              self._TimestampThreshold))
+                                                                                              self.__TimestampThreshold))
         if self.Index < 0:
-            raise Exception("index must be 0 or more, but its index is {}".format(self.Index))
+            raise Exception("index must be 0 or more, but its index is {}".format(self.Index()))
 
         elif self.Index == 0:
             if self.Difficulty != 0:
                 raise Exception(
-                    "difficulty must bt 0 for the genesis block, but its difficuly is {}.".format(self.Difficulty))
+                    "difficulty must bt 0 for the genesis block, but its difficuly is {}.".format(self.Difficulty()))
 
             if self.PreviousHash != None:
                 raise Exception("previous hash must be empty for the genesis block.")
@@ -144,17 +137,17 @@ class Block():
             if self.Difficulty < 1:
                 raise Exception(
                     "difficulty must be more than 0 (except of the genesis block), but its difficulty is {}.".format(
-                        self.Difficulty))
+                        self.Difficulty()))
 
             if self.PreviousHash == None:
                 raise Exception("previous hash must be present except of the genesis block.")
 
-        if self.Hash.Satisfies(self._difficulty):
+        if self.Hash.Satisfies(self.__difficulty):
             raise Exception(
-                "hash ({}) with the nonve ({}) does not satisfy its difficulty level {}".format(self.Hash, self.Nonce,
-                                                                                                self.Difficulty))
+                "hash ({}) with the nonve ({}) does not satisfy its difficulty level {}".format(self.Hash(), self.Nonce(),
+                                                                                                self.Difficulty()))
 
-        for tx in self.Transaction:
+        for tx in self.Transaction():
             tx.Validate
 
 
