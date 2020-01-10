@@ -70,24 +70,24 @@ class Block():
 
         emptyNonce = MakeBlock(bytearray(0)).ToBencodex(false, flase)
         oneByteNoce = MakeBlock(bytearray(1)).ToBencodex(false, false)
-        offset = 0
+        offset = 0 #find location of Nonce
         while offset < len(emptyNonce) and emptyNonce[offset] == oneByteNoce[offset]:
             offset = offset + 1
 
         stampPrefix = emptyNonce[0:offset]
         stampSuffix = emptyNonce[offset:len(emptyNonce)]
 
-        nLen = len(bytearray(n))
+        def Stamp(n):
+            nLen = len(bytearray(n))
 
-        nLenStr = str(nLen).encode()
-        totalLen = len(stampPrefix) + len(nLenStr) + len(stampSuffix) + 1
-        stamp = bytearray(totalLen)
-        stamp = copy.deepcopy(stampPrefix) + copy.deepcopy(nLenSter) + bytearray(0x3a) + copy.deepcopy(stampSuffix)
+            nLenStr = str(nLen).encode()
+            stamp = copy.deepcopy(stampPrefix) + copy.deepcopy(nLenSter) + bytearray(0x3a) + copy.deepcopy(stampSuffix)
+            return stamp
 
-        nonce = Hashcash.Answer(stamp)
+        nonce = Hashcash.Answer(Stamp(n),self._difficulty)
 
         return MakeBlock(nonce)
-
+]
 
     def FromBencodex(encoded):
         serializer = BencodexFormatter()

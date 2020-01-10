@@ -6,12 +6,12 @@ class Hashcash(sha256):
     #Stamp ??
 
     def Answer(self,stamp,difficulty):
-        nonceSize =  ##바이트 지정 ?? 10??
+        nonceSize =  10
         nonceBytes = [None]*10
+        self.RandomBytes(nonceBytes, nonceSize)
         while True:
             self.RandomBytes(nonceBytes,nonceSize)
-
-            digest = sha256(Stamp(nonceBytes)) #stamp??
+            digest = sha256(stamp(nonceBytes))
             if self.Satisfy(difficulty, digest):
                 return bytearray(nonceBytes)
 

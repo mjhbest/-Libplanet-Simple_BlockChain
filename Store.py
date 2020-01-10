@@ -7,8 +7,8 @@ class Store():
         if txs == None:
             self.Txs = dict()
 
-    def AddBlock(self,block):
-        self.Blocks[blokc.]
+    def AddBlock(self,block,hash):
+        self.Blocks[hash] = block
 
-    def AddTx(self,Tx):
-
+    def AddTx(self,Tx,TxId):
+        self.Txs[TxId] = Tx

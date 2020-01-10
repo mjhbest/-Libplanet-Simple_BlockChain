@@ -78,13 +78,15 @@ class BlockChain():
 
         if not self.Policy().ValidateNextBlock(self,block):
             raise ValueError("Append Failed. The block is invalid")
-        self._rwlock.release_w()
+        self._rwlock.acquire_w()
+
         prevTip = self.Tip()
         self._blocks[block.Hash()] = block
+        self._Store.AddBlock(block.Hash())
+        #No consdieration for Tx evaluation & NonceChanged issues
 
-
-
-
+        self._rwlock.acquire_r()
+        
 
 
 
