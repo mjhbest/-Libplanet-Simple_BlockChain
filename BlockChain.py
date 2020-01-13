@@ -6,7 +6,7 @@ from random import getrandbits
 
 class BlockChain():
 
-    def __init__(policy, store, id, genesisBlock):
+    def __init__(self,policy, store, id, genesisBlock):
         self.__Id = id
         self.__Policy = policy
         self.__Store = store
@@ -14,7 +14,6 @@ class BlockChain():
         self._Blocks = list(store.blks)
         self.__Rwlock = RwLock()
         self.__IdChain = []
-
 
         if Count == 0:
             Append(genesisBlock)
@@ -51,7 +50,7 @@ class BlockChain():
 
     def MakeGenesisBlck(self, privateKey = None, timestamp = None):
         if privateKey == None:
-            privateKey = getrandbits(64*8) #privateKey length? -> by randomize?
+            privateKey = getrandbits(64*8) #privateKey length? -> by randomize?  !coincurve 따라서 생성하
         txs = [Transaction(true,true,0)]
         return geneBlock.Mine(0,0,privateKey,None, timestamp,txs)
 
@@ -93,13 +92,15 @@ class BlockChain():
 
         #modification
         self.__Rwlock.acquire_w()
-        if block.PreviousHash() != self.Tip().Hash() #Late Appending
+        if block.PreviousHash() != self.Tip().Hash():
+            raise Exception("Late Append")
 
         self._Blocks[block.Hash()] = block
         self.__Store.AddBlock(block.Hash())
         #No consdieration for Tx evaluation & NonceChanged issues
 
         self.__Rwlock.acquire_r()
+        print("Appending Block{} succeed".format(block.Hash()))
 
 
     def Tip(self):
@@ -130,7 +131,7 @@ class BlockChain():
         return self.__Store
 
     def BlockList(self):
-        reuitnr self.__IdChain
+        return self.__IdChain
 
 
 

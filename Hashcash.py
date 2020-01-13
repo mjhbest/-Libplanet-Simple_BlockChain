@@ -29,5 +29,7 @@ class Hashcash(sha256):
             return True
 
         maxTarget = pow(2,256)
-        target = biginteger(maxTarget/difficulty) #biginteger 구현 ? Sat
-        resutl = biginteger(bytearray())
+        target = maxTarget/difficulty
+        #Question
+
+

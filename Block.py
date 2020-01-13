@@ -1,6 +1,6 @@
 import datetime
 import hashlib
-from Bencodex import *
+from bencodex import *
 
 class Block():
 
@@ -8,11 +8,11 @@ class Block():
     __TimestampThreshold = datetime.timedelta(seconds=900)
 
     # initialize
-    def __init__(self, rb = None, index,difficulty, nonce, miner, previousHash,timestamp,txs):
+    def __init__(self, index,difficulty, nonce, miner, previousHash,timestamp,txs, rb = None):
         if rb == None:
-            self.____index = index
-            self.____difficulty = difficulty
-            self.____nonce = nonce
+            self.__index = index
+            self.__difficulty = difficulty
+            self.__nonce = nonce
             self.__miner = miner
             self.__previousHash = previousHash
             self.__timestamp = timestamp
@@ -23,13 +23,13 @@ class Block():
             __block(rb)
 
 
-        def __block(rb):
-        self.__index =rb.__index,
-        self.__difficulty=rb.__difficulty,
-        self.__nonce=Nonce(rb.__nonce),
-        self.__miner=None if rb.__miner == None else Address(rb.__miner),
-        self.__previousHash=None if rb.__previousHash == None else rb.__previousHash,
-        self.__timestamp=rb.__timestamp,
+    def __block(self,rb):
+        self.__index = rb.__index
+        self.__difficulty=rb.__difficult
+        self.__nonce=Nonce(rb.__nonce)
+        self.__miner=None if rb.__miner == None else Address(rb.__miner)
+        self.__previousHash=None if rb.__previousHash == None else rb.__previousHash
+        self.__timestamp=rb.__timestamp
         self.__transactions=rb.__transactions
         self.__hash = hashlib.sha256(ToBencodex(bytearray(self)))
 
@@ -57,7 +57,8 @@ class Block():
     def Transcations(self):
         return self.__transactions
  
-    def Mine(self, index, difficulty, miner, previousHash, timestamp, transactions): #여기서 원래 libplanet 코드는 offset 찾아서 논스만 바꿔주는 방식임 -=> 이걸 어떻게 바꿀지는 생각좀
+    def Mine( self, index, difficulty, miner,previousHash , timestamp, transactions):
+
         txs = ToimmutableList(sorted(transactions, key = lambda tx: tx.Id))
 
         def MakeBlock(n):
@@ -82,7 +83,7 @@ class Block():
         nonce = Hashcash.Answer(Stamp(n),self.__difficulty)
 
         return MakeBlock(nonce)
-]
+
 
     def FromBencodex(encoded): #yet
         serializer = BencodexFormatter()

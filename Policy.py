@@ -35,7 +35,17 @@ class BlockPolicy():
 
 
     def ValidateNextBlock(self,blocks,nextBlock):
-        
+
+    index = blocks.Count()
+    difficulty = GetNextBlcokDifficulty(blocks)
+
+    if index >=1:
+        lastBlock = blocks[index-1]
+        prevHash =
+    else:
+        lastBlock = None
+
+
 
 
 
