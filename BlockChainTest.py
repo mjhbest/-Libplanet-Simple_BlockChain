@@ -5,10 +5,10 @@ import datetime
 from random import randint
 
 class BlockChainTest(BlockChain):
-    def __init__(self,n):
-        geneBlock = MakeGenesisBlock()
+
+    def DoTest(self,n):
         store = Store()
-        blockchain = BlockChain(store,randint(0,256),geneBlock)
+        self.blockchain = BlockChain(store,randint(0,256),geneBlock)
         for i in range(n):
             self.Append()
 

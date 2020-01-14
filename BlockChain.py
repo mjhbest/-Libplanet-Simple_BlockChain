@@ -3,6 +3,7 @@ from datetime import datetime
 from Block import Block
 from rwlock import RwLock
 from random import getrandbits
+import coincurve
 
 class BlockChain():
 
@@ -17,7 +18,7 @@ class BlockChain():
 
         if Count == 0:
             Append(genesisBlock)
-        elif Genesis != genesisBlock:
+        elif self._Blocks[self.__IdChain[0]] != genesisBlock:
             msg = "Genesis Block Error"
             raise Exception(msg)
 
@@ -50,8 +51,8 @@ class BlockChain():
 
     def MakeGenesisBlck(self, privateKey = None, timestamp = None):
         if privateKey == None:
-            privateKey = getrandbits(64*8) #privateKey length? -> by randomize?  !coincurve 따라서 생성하
-        txs = [Transaction(true,true,0)]
+            privatekey = PrivateKey()
+        txs = []
         return geneBlock.Mine(0,0,privateKey,None, timestamp,txs)
 
 
