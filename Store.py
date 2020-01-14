@@ -1,4 +1,4 @@
-class Store():
+class Store:
     def __init__(self,blks = None, txs = None):
         self.Blocks = blks
         self.Txs = txs

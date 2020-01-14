@@ -1,5 +1,5 @@
 
-class Transaction():
+class Transaction:
 
      def __init__(self,id, isEval= False, data=None):
          self.isEval = isEval

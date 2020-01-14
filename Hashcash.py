@@ -17,7 +17,6 @@ class Hashcash(sha256):
 
 
     def RandomBytes(self,nonceBytes,size):
-
         for i in size:
             nonceBytes[i] = bytearray(random.getrandbits(8))
 

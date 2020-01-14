@@ -5,7 +5,7 @@ from rwlock import RwLock
 from random import getrandbits
 import coincurve
 
-class BlockChain():
+class BlockChain:
 
     def __init__(self,policy, store, id, genesisBlock):
         self.__Id = id
@@ -41,7 +41,7 @@ class BlockChain():
         elif isinstance(item, hashlib.sha256()):
 
             if not item in Store:
-                raise KeyError
+                raise Exception()
 
             self.Locker().acquire_r()
             try:
@@ -49,9 +49,9 @@ class BlockChain():
             finally:
                 self.__Rwlock.release_r()
 
-    def MakeGenesisBlck(self, privateKey = None, timestamp = None):
+    def MakeGenesisBlock(self, privateKey = None, timestamp = None):
         if privateKey == None:
-            privatekey = PrivateKey()
+            privateKey = PrivateKey()
         txs = []
         return geneBlock.Mine(0,0,privateKey,None, timestamp,txs)
 
