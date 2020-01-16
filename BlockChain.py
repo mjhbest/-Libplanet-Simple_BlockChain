@@ -1,9 +1,7 @@
-import hashlib
 from datetime import datetime
-from Block import Block
 from rwlock import RwLock
-from random import getrandbits
-import coincurve
+from coincurve import PrivateKey
+import Block
 
 class BlockChain:
 
@@ -29,37 +27,37 @@ class BlockChain:
         if isinstance(item, int):
             self.Locker().acquire_r()
             try:
-                blockHash = hashlib.sha256()
-                blockHash.update(self.Store().Blo[item])
+                blockHash = Hashcash()
+                blockHash.Hash(self.Store().Blo[item])
 
                 if blockHash == None:
                     raise IndexError
-                return self._Blocks[blockHash.digest()]
+                return self._Blocks[blockHash.Digest()]
             finally:
                 self.Locker().release_r()
 
-        elif isinstance(item, hashlib.sha256()):
+        elif isinstance(item, Hashcash):
 
             if not item in Store:
                 raise Exception()
 
             self.Locker().acquire_r()
             try:
-                return self._Blocks[blockHash]
+                return self._Blocks[blockHash.Digest()]
             finally:
                 self.__Rwlock.release_r()
 
     def MakeGenesisBlock(self, privateKey = None, timestamp = None):
         if privateKey == None:
             privateKey = PrivateKey()
-        txs = []
+        txs = list()
         return geneBlock.Mine(0,0,privateKey,None, timestamp,txs)
 
 
     def containBlock(self, blockHash):
         self.__Rwlock.acquire_r()
         try:
-            return blockHash in self._Blocks.keys() and self._Blocks[blockHash].Index() <= self.Tip().Index
+            return blockHash.Digest() in self._Blocks.keys() and self._Blocks[blockHash.Digest()].Index() <= self.Tip().Index
         finally:
                 self.rwlock.release_r()
 
@@ -73,33 +71,30 @@ class BlockChain:
 
 
     def Append(self, block, currentTime = None):
-        evaluation = True #evaluation check
+
+        evaluation = True
         for tx in block.Transcations():
             evaluation = evaluation and tx.iseval
-
         if not evaluations:
             raise Exception("Argument Exception : Evaluation have to be done before the rendering")
         if currentTime == None:
             Append(block, datetime.utcnow())
 
-
+        #READLOCK
         self.Locker().acquire_r()
         if not self.Policy().ValidateNextBlock(self,block):
             raise ValueError("Append Failed. The block is invalid")
-
-        for tx in block.Transcations(): #No Case handling for chainging nonce within appending
+        for tx in block.Transcations():
             tx.nonce = tx.nonce + 1
         self.Locker().release_r()
 
-        #modification
+        #WRITELOCK
         self.__Rwlock.acquire_w()
         if block.PreviousHash() != self.Tip().Hash():
             raise Exception("Late Append")
 
         self._Blocks[block.Hash()] = block
         self.__Store.AddBlock(block.Hash())
-        #No consdieration for Tx evaluation & NonceChanged issues
-
         self.__Rwlock.acquire_r()
         print("Appending Block{} succeed".format(block.Hash()))
 

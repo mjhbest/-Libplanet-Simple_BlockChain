@@ -43,8 +43,6 @@ class BlockPolicy:
             lastBlock = blocks[index-1]
             prevHash = lastBlock.Hash()
             prevTimeStamp = lastBlock.Timestamp()
-        else:
-            lastBlock = None
 
 
         if nextBlock.Index() != index:

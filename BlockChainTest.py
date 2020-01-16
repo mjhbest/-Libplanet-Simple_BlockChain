@@ -1,4 +1,4 @@
-from BlockChain import *
+import BlockChain
 import Policy
 import Store
 from Block import *
@@ -20,14 +20,14 @@ class BlockChainTest:
         timestamp = prevBlock.__timestamp + blockInterval
 
         #nonce Handling 필요 nonce 가 0인경우
-        new_block = block.Mine(index,difficulty,miner,prevBlock.Hash(),timestamp,txs)
+        new_block = Block().Mine(index,difficulty,miner,prevBlock.Hash(),timestamp,txs)
 
-        self.blockChain.Append(new_block)
+        selfblockChain.Append(new_block)
 
 
 if __name__ == '__main__':
-    n = input()
-    geneBlock = Block().Mine(0,0,PrivateKey(),None,None,list())
+    #n = input()
+    geneBlock = Block().Mine(0,0,None,None,None,list())
     store = Store()
     policy = BlockPolicy()
-    BlockChainTest(BlockPolicy(),Store(),"Test",geneBlock,n)
+    BlockChainTest(BlockPolicy(),Store(),"Test",geneBlock,3)
