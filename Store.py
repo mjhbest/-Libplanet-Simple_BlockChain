@@ -5,10 +5,10 @@ class Store:
         if blks == None:
             self.Blocks = dict()
         if txs == None:
-            self.Txs = dict()
+            self.Txs = []
 
-    def AddBlock(self,block,hash):
-        self.Blocks[hash] = block
+    def AddBlock(self,block):
+        self.Blocks[block.Hash()] = block
 
-    def AddTx(self,Tx,TxId):
-        self.Txs[TxId] = Tx
+    def AddTx(self,Tx):
+        self.Txs.append(Tx)

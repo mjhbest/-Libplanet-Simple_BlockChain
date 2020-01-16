@@ -1,5 +1,5 @@
 from coincurve import *
-import
+
 class Transaction:
 
      def __init__(self,id, privateKey, data=None):
@@ -10,12 +10,9 @@ class Transaction:
          self.signature = privateKey.sign()
 
      def Validate(self):
-         if not self.publicKey.verify(self.signature,self.ToBencodex())
-            raise Exception("The signature is invalid")함
+         if not self.publicKey.verify(self.signature,self.ToBencodex()):
+            raise Exception("The signature is invalid")
 
-         if
-
-     #기존 코드의 Create 메소드의 필요성 확인해야
 
      def ToBencodex(self):
          return dumps(self.TxBencodeFormatter())

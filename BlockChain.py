@@ -1,103 +1,66 @@
 from datetime import datetime
-from rwlock import RwLock
 from coincurve import PrivateKey
-import Block
+from Block import Block
+from Hashcash import Hashcash
+
 
 class BlockChain:
 
-    def __init__(self,policy, store, id, genesisBlock):
+    def __init__(self, policy=None, store=None, id=None, genesisBlock=None):
         self.__Id = id
         self.__Policy = policy
         self.__Store = store
-        self.__Transaction = store.txs
-        self._Blocks = list(store.blks)
-        self.__Rwlock = RwLock()
+        self.__Transaction = store.Txs
+        self._Blocks = store.Blocks
         self.__IdChain = []
+        self.Append(genesisBlock)
 
-        if Count == 0:
-            Append(genesisBlock)
-        elif self._Blocks[self.__IdChain[0]] != genesisBlock:
+        if self.__IdChain[0] != genesisBlock:
             msg = "Genesis Block Error"
             raise Exception(msg)
 
-    def __del__(self):
-        del self.__Rwlock
-
     def __getitem__(self, item):
         if isinstance(item, int):
-            self.Locker().acquire_r()
-            try:
-                blockHash = Hashcash()
-                blockHash.Hash(self.Store().Blo[item])
+            blockHash = Hashcash()
+            blockHash.Hash(self.Store().Blo[item])
 
-                if blockHash == None:
-                    raise IndexError
-                return self._Blocks[blockHash.Digest()]
-            finally:
-                self.Locker().release_r()
+            if blockHash is None:
+                raise IndexError
+            return self.Blocks()[blockHash.Digest()]
 
         elif isinstance(item, Hashcash):
 
             if not item in Store:
                 raise Exception()
+            return self.Blocks()[Hashcash.Digest()]
 
-            self.Locker().acquire_r()
-            try:
-                return self._Blocks[blockHash.Digest()]
-            finally:
-                self.__Rwlock.release_r()
 
-    def MakeGenesisBlock(self, privateKey = None, timestamp = None):
-        if privateKey == None:
-            privateKey = PrivateKey()
-        txs = list()
-        return geneBlock.Mine(0,0,privateKey,None, timestamp,txs)
-
+    def MakeGenesisBlock(self, timestamp=None):
+        return Block().Mine(0, 0,  None, timestamp, [])
 
     def containBlock(self, blockHash):
-        self.__Rwlock.acquire_r()
-        try:
-            return blockHash.Digest() in self._Blocks.keys() and self._Blocks[blockHash.Digest()].Index() <= self.Tip().Index
-        finally:
-                self.rwlock.release_r()
+        return blockHash.Digest() in self.Blocks().keys() \
+               and self.Blocks()[blockHash.Digest()].Index() <= self.Tip().Index()
 
 
     def getTransaction(self, txId):
-        self.Locker().acquire_r()
-        try:
-            return self.__Transaction[txId]
-        finally:
-            self.Locker().release_r()
+        return self.__Transaction[txId]
 
+    def Append(self, block):
 
-    def Append(self, block, currentTime = None):
-
-        evaluation = True
-        for tx in block.Transcations():
-            evaluation = evaluation and tx.iseval
-        if not evaluations:
-            raise Exception("Argument Exception : Evaluation have to be done before the rendering")
-        if currentTime == None:
-            Append(block, datetime.utcnow())
-
-        #READLOCK
-        self.Locker().acquire_r()
-        if not self.Policy().ValidateNextBlock(self,block):
+        print(block.BlockBencodeFormatter())
+        if not self.Policy().ValidateNextBlock(self, block):
             raise ValueError("Append Failed. The block is invalid")
-        for tx in block.Transcations():
+        for tx in block.Transactions():
             tx.nonce = tx.nonce + 1
-        self.Locker().release_r()
 
-        #WRITELOCK
-        self.__Rwlock.acquire_w()
-        if block.PreviousHash() != self.Tip().Hash():
+        if block.Index() != 0 and block.PreviousHash() != self.Tip().Hash():
             raise Exception("Late Append")
 
-        self._Blocks[block.Hash()] = block
-        self.__Store.AddBlock(block.Hash())
-        self.__Rwlock.acquire_r()
+        self.Blocks()[block.Hash()] = block
+        self.__IdChain.append(block)
+        self.__Store.AddBlock(block)
         print("Appending Block{} succeed".format(block.Hash()))
-
 
     def Tip(self):
         try:
@@ -105,20 +68,14 @@ class BlockChain:
         except IndexError:
             return None
 
-    def Locker(self):
-        return self.__Rwlock
-
     def Policy(self):
         return self.__Policy
 
     def Genesis(self):
-        return this[0]
+        return self[0]
 
     def Id(self):
         return self.__Id
-
-    def BlockHahses(self):
-        return IterateBlockHashes()
 
     def Count(self):
         return len(self.__IdChain)
@@ -126,16 +83,5 @@ class BlockChain:
     def Store(self):
         return self.__Store
 
-    def BlockList(self):
-        return self.__IdChain
-
-
-
-
-
-
-
-
-
-
-
+    def Blocks(self):
+        return self._Blocks

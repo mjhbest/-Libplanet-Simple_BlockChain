@@ -1,5 +1,6 @@
 from hashlib import sha256
-from random import Random
+from random import random, Random, getrandbits
+
 
 class Hashcash:
 
@@ -13,36 +14,25 @@ class Hashcash:
     def Digest(self):
         return self.hash.digest()
 
-    def Answer(self,stamp,difficulty):
+    def Answer(self, stamp, difficulty):
 
-        nonceSize =  10
-        nonceBytes = [None]*10
-        self.RandomBytes(nonceBytes, nonceSize)
+        nonceSize = 10
         while True:
-            self.RandomBytes(nonceBytes,nonceSize)
+            nonceBytes = self.RandomBytes(nonceSize)
             digest = self.Hash(stamp(nonceBytes))
-            if self.Satisfy(difficulty, digest):
-                return bytearray(nonceBytes)
+            if self.Satisfy(difficulty):
+                return nonceBytes
 
+    def RandomBytes(self,  size):
+        return getrandbits(8*size).to_bytes(10,"big")
 
-    def RandomBytes(self,nonceBytes,size):
-        for i in range(size):
-            nonceBytes[i] = bytearray(Random().getrandbits(8))
+    def Satisfy(self, difficulty):
 
-
-    def Satisfy(self,difficulty,digest):
-
-        if digest == 0:
+        if difficulty == 0:
             return True
 
-        maxTarget = pow(2,256)
-        target = int(maxTarget/difficulty)
-        result = int.from_bytes(bytearray(self.Digest()).append(0),byteorder="big")
+        maxTarget = pow(2, 256)
+        target = int(maxTarget / difficulty)
+        b = self.Digest()+bytes([0])
+        result = int.from_bytes(b, byteorder="big")
         return result < target
-
-
-
-
-
-
-

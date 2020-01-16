@@ -1,33 +1,30 @@
-import BlockChain
-import Policy
-import Store
-from Block import *
-import Transaction
-import datetime
-from coincurve import *
+from BlockChain import BlockChain
+from Policy import BlockPolicy
+from Store import Store
+from Block import Block
+from Transaction import Transaction
+from datetime import timedelta, datetime
+from coincurve import PrivateKey
 
 class BlockChainTest:
-    def __init__(self,policy,store,id,genesisBlock,n):
+    def __init__(self,policy,store,id,n):
+        genesisBlock = Block().Mine(0, 0,  None, datetime.utcnow(), [])
         self.blockChain = BlockChain(policy,store,id,genesisBlock)
         for i in range(n):
-            self.Attach()
-        # print(self._Blocks)
+            block = self.MakeNewBlock(self.blockChain)
+            self.blockChain.Append(block)
 
-    #임의의 블럭을 생성해서 BlockChain에 Append 시키는 method
-    def Attach(self,previousBlock = None, txs = list(), nonce = None, difficulty = 1, miner = None, blockInterval = None):
-        prevBlock = self.blockChain.Tip() if previousBlock == None else previousBlock
+    def MakeNewBlock(self,blocks):
+        prevBlock = blocks.Tip()
         index = prevBlock.Index()+1
-        timestamp = prevBlock.__timestamp + blockInterval
+        txs = []
+        difficulty = BlockPolicy().GetNextBlockDifficulty(blocks)
+        return Block().Mine(index,difficulty,prevBlock.Hash(),(prevBlock.Timestamp()+timedelta(seconds=5000)),txs)
 
-        #nonce Handling 필요 nonce 가 0인경우
-        new_block = Block().Mine(index,difficulty,miner,prevBlock.Hash(),timestamp,txs)
-
-        selfblockChain.Append(new_block)
 
 
 if __name__ == '__main__':
     #n = input()
-    geneBlock = Block().Mine(0,0,None,None,None,list())
     store = Store()
     policy = BlockPolicy()
-    BlockChainTest(BlockPolicy(),Store(),"Test",geneBlock,3)
+    BlockChainTest(BlockPolicy(),Store(),"Test",3)
