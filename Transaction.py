@@ -1,5 +1,3 @@
-from coincurve import *
-import bencodex
 
 class Transaction:
 
@@ -13,10 +11,6 @@ class Transaction:
      def Validate(self):
          if not self.publicKey.verify(self.signature,self.ToBencodex()):
             raise Exception("The signature is invalid")
-
-
-     def ToBencodex(self):
-         return dumps(self.TxBencodeFormatter())
 
 
      def TxBencodeFormatter(self):

@@ -4,7 +4,7 @@ import bencodex
 
 class BlockPolicy:
 
-    def __init__(self, blockInterval=5000, minimumDiffifulty=1024, DifficultyBoundDivisor=128):
+    def __init__(self, blockInterval=1024, minimumDiffifulty=1024, DifficultyBoundDivisor=128):
         self.blockInterval = datetime.timedelta(seconds=self.blockInterval)\
             if isinstance(int, type(blockInterval))\
             else blockInterval
