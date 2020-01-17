@@ -5,7 +5,7 @@ class Store:
         if blks == None:
             self.Blocks = dict()
         if txs == None:
-            self.Txs = []
+            self.Txs = dict()
 
     def AddBlock(self,block):
         self.Blocks[block.Hash()] = block

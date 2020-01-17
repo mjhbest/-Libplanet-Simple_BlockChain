@@ -3,7 +3,6 @@ from coincurve import PrivateKey
 from Block import Block
 from Hashcash import Hashcash
 
-
 class BlockChain:
 
     def __init__(self, policy=None, store=None, id=None, genesisBlock=None):
@@ -23,17 +22,14 @@ class BlockChain:
         if isinstance(item, int):
             blockHash = Hashcash()
             blockHash.Hash(self.__IdChain[item])
-
             if blockHash is None:
                 raise IndexError
             return self.Blocks()[blockHash.Digest()]
 
         elif isinstance(item, Hashcash):
-
             if not item in Store:
                 raise Exception()
             return self.Blocks()[Hashcash.Digest()]
-
 
     def MakeGenesisBlock(self, timestamp=None):
         return Block().Mine(0, 0,  None, timestamp, [])
@@ -41,7 +37,6 @@ class BlockChain:
     def containBlock(self, blockHash):
         return blockHash.Digest() in self.Blocks().keys() \
                and self.Blocks()[blockHash.Digest()].Index() <= self.Tip().Index()
-
 
     def getTransaction(self, txId):
         return self.__Transaction[txId]

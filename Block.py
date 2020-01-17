@@ -78,6 +78,9 @@ class Block:
         }
         return d
 
+    def Evaluate(self):
+        pass
+
     def Validate(self, currentTime):
         if currentTime + self.__TimestampThreshold < self.__timestamp:
             raise Exception(
