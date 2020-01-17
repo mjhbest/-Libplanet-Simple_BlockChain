@@ -1,5 +1,6 @@
 from hashlib import sha256
 from random import random, Random, getrandbits
+import Block
 
 
 class Hashcash:
@@ -7,8 +8,11 @@ class Hashcash:
     def __init__(self):
         self.hash = sha256()
 
-    def Hash(self, bytes):
-        self.hash.update(bytes)
+    def Hash(self, data):
+        if isinstance(data,bytes):
+            self.hash.update(data)
+        elif isinstance(data,object):
+            self.hash.update(data.ToBencodex())
         return self.hash.digest()
 
     def Digest(self):

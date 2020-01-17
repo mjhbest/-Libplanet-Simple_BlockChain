@@ -70,7 +70,7 @@ class Block:
     def BlockBencodeFormatter(self):
         d = {
             'index': self.__index,
-            'difficulty': self.__difficulty,
+            'difficulty': pickle.dumps(self.__difficulty),
             'nonce': self.__nonce,
             'previousHash': self.__previousHash,
             'timestamp': pickle.dumps(self.__timestamp),
@@ -88,12 +88,12 @@ class Block:
         if self.Index() < 0:
             raise Exception("index must be 0 or more, but its index is {}".format(self.Index()))
 
-        elif self.Index == 0:
+        elif self.Index() == 0:
             if self.Difficulty != 0:
                 raise Exception(
                     "difficulty must bt 0 for the genesis block, but its difficuly is {}.".format(self.Difficulty()))
 
-            if self.PreviousHash != None:
+            if self.PreviousHash() is not None:
                 raise Exception("previous hash must be empty for the genesis block.")
 
         else:

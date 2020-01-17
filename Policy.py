@@ -1,4 +1,5 @@
 import datetime
+import bencodex
 
 
 class BlockPolicy:
@@ -20,17 +21,15 @@ class BlockPolicy:
                 index = self.minimumDifficulty
             return index
 
-        prevBlock = blocks.Blocks()[index - 1]
-        prevPrevTimeStamp = blocks.Blocks()[index - 2].Timestamp()
+        prevBlock = blocks[index - 1]
+        prevPrevTimeStamp = blocks[index - 2].Timestamp()
         prevTimeStamp = prevBlock.Timestamp()
         timeDifference = prevTimeStamp - prevPrevTimeStamp
         minimumMultiplier = -99
-
-        multiplier = max([1 - (timeDifference / self.blockInterval), minimumMultiplier])
+        multiplier = max([1 - (int(timeDifference.total_seconds()) / self.blockInterval), minimumMultiplier])
 
         prevDifficulty = prevBlock.Difficulty()
         offset = prevDifficulty / self.DifficultyBoundDivisor
-
         nextDifficulty = prevDifficulty + offset * multiplier
 
         return max([nextDifficulty, minimumMultiplier])
@@ -60,3 +59,14 @@ class BlockPolicy:
                 raise Exception("Current TimeStamp is ealrlier than before one.")
         print(index)
         return True
+
+    def ToBencodex(self):
+        d = {
+            'blockInterval' : self.blockInterval,
+            'minimumDifficulty' : self.minimumDifficulty,
+            'DifficultyBoundDivisor': self.DifficultyBoundDivisor
+
+        }
+        return  dumps(d)
+
+

@@ -11,6 +11,8 @@ class BlockChainTest:
         genesisBlock = Block().Mine(0, 0,  None, datetime.utcnow(), [])
         self.blockChain = BlockChain(policy,store,id,genesisBlock)
         for i in range(n):
+            print("-----------------------------------------------------------")
+            print("_________",i+1,"' block Mining & Appending Start_________")
             block = self.MakeNewBlock(self.blockChain)
             self.blockChain.Append(block)
 
@@ -27,4 +29,4 @@ if __name__ == '__main__':
     #n = input()
     store = Store()
     policy = BlockPolicy()
-    BlockChainTest(BlockPolicy(),Store(),"Test",3)
+    BlockChainTest(BlockPolicy(),Store(),"Test",10)

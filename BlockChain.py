@@ -22,7 +22,7 @@ class BlockChain:
     def __getitem__(self, item):
         if isinstance(item, int):
             blockHash = Hashcash()
-            blockHash.Hash(self.Store().Blo[item])
+            blockHash.Hash(self.__IdChain[item])
 
             if blockHash is None:
                 raise IndexError
@@ -49,8 +49,10 @@ class BlockChain:
     def Append(self, block):
 
         print(block.BlockBencodeFormatter())
+        print("Appending Block :{} ".format(block.Hash()))
         if not self.Policy().ValidateNextBlock(self, block):
             raise ValueError("Append Failed. The block is invalid")
+        print(">>> Validate_Done")
         for tx in block.Transactions():
             tx.nonce = tx.nonce + 1
 
@@ -60,7 +62,7 @@ class BlockChain:
         self.Blocks()[block.Hash()] = block
         self.__IdChain.append(block)
         self.__Store.AddBlock(block)
-        print("Appending Block{} succeed".format(block.Hash()))
+        print(">>> Appending_Succeed\n")
 
     def Tip(self):
         try:

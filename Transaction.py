@@ -1,4 +1,5 @@
 from coincurve import *
+import bencodex
 
 class Transaction:
 
