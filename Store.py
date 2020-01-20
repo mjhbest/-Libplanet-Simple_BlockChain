@@ -12,3 +12,5 @@ class Store:
 
     def AddTx(self,Tx):
         self.Txs.append(Tx)
+
+

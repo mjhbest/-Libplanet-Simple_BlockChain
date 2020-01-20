@@ -9,7 +9,7 @@ class Transaction:
          self.data = data
          self.nonce = 0
          self.publicKey = privateKey.public_key
-         self.signature = privateKey.sign(dumps(self.TxBencodeFormatter()))
+         self.signature = privateKey.sign(pickle.dumps(self.TxBencodeFormatter()))
 
      def Validate(self):
          if not self.publicKey.verify(self.signature,self.TxBencodex()):
@@ -23,6 +23,6 @@ class Transaction:
              'id': self.id,
              'data': self.data,
              'nonce': self.nonce,
-             'publicKey': self.publicKey
+             'publicKey': self.publicKey.format(True)
          }
          return dic

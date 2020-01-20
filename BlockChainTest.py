@@ -21,9 +21,8 @@ class BlockChainTest:
     def MakeNewBlock(self,blocks):
         prevBlock = blocks.Tip()
         index = prevBlock.Index()+1
-        txs=[]
-        # txs = self.MakeTransactions(index)
-        # blocks.Store().Txs.update(txs)
+        txs = self.MakeTransactions(index)
+        blocks.Store().Txs.update(txs)
         difficulty = BlockPolicy().GetNextBlockDifficulty(blocks)
         return Block().Mine(index,difficulty,prevBlock.Hash(),datetime.utcnow(),txs)
 
@@ -32,12 +31,15 @@ class BlockChainTest:
         randtime = randint(1000,5000)
         txlst = dict()
         cnt = 0
-        while(datetime.utcnow()-startTime<=timedelta(seconds=randtime)):
-            counter = getrandbits(8)
-            tx = Transaction(str(index)+str(cnt), PrivateKey(), counter)
-            cnt = cnt+1
-            txlst.append(tx)
-            sleep(randint(500,1000))
+        tx = Transaction(index, PrivateKey(), getrandbits(8))
+        txlst[str(index)] = tx
+        # while(datetime.utcnow()-startTime<=timedelta(seconds=randtime)):  -> 이거 시간 설정에서 오류
+        #     counter = getrandbits(8)
+        #     id = str(index)+"-"+str(cnt)
+        #     tx = Transaction(id, PrivateKey(), counter)
+        #     cnt = cnt+1
+        #     txlst[id] = tx
+        #     sleep(randint(500,1000))
         return txlst
 
 
